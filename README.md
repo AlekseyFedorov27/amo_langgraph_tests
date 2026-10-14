@@ -13,43 +13,36 @@ python -m pytest -v
 
 В тестах используются фиктивные данные, и вызовы к amoCRM не выполняются. Для реального запуска установите переменные `AMO_SUBDOMAIN` и `AMO_TOKEN`, а затем выполните `python main.py`.
 
-
-
+```mermaid
 flowchart TD
-    A["Телефонный звонок"] --> B["Телефония: запись звонка"]
-    B --> C["Webhook / API"]
-    C --> D["Очередь задач: Redis"]
-    D --> E["Speech-to-Text: транскрибация"]
-    E --> F["Агент анализа звонка: LangGraph"]
-    F --> G["Извлечение фактов и договорённостей"]
-    G --> H{"Данных достаточно?"}
+A["Телефонный звонок"] --> B["Телефония: запись звонка"] --> C["Webhook / API"] --> D["Очередь задач: Redis"] --> E["Speech-to-Text: транскрибация"] --> F["Агент анализа звонка: LangGraph"] --> G["Извлечение фактов и договорённостей"] --> H{"Данных достаточно?"}
 
-    H -->|Да| I["Валидация и бизнес-правила"]
-    H -->|Нет: низкая уверенность| J["Проверка человеком"]
-    J --> I
+H -->|Да| I["Валидация и бизнес-правила"]
+H -->|Нет: низкая уверенность| J["Проверка человеком"]
+J --> I
 
-    I --> K["Интеграция с CRM: REST API"]
-    K --> L["Создание или обновление сделки"]
-    K --> P["Добавление примечания и задачи"]
+I --> K["Интеграция с CRM: REST API"]
+K --> L["Создание или обновление сделки"]
+K --> P["Добавление примечания и задачи"]
 
-    K <--> N["CRM: сделки, контакты, задачи"]
+K <--> N["CRM: сделки, контакты, задачи"]
 
-    G -.-> M[("PostgreSQL")]
-    I -.-> M
-    K -.-> M
+G -.-> M[("PostgreSQL")]
+I -.-> M
+K -.-> M
 
-    classDef process fill:#eaf2ff,stroke:#356ac3,color:#17365d,stroke-width:1.5px
-    classDef decision fill:#fff3cd,stroke:#c89b25,color:#664d03,stroke-width:1.5px
-    classDef storage fill:#e0f5e9,stroke:#26945e,color:#14532d,stroke-width:1.5px
-    classDef human fill:#f3e8ff,stroke:#8b5cf6,color:#4c1d95,stroke-width:1.5px
-    classDef external fill:#f1f5f9,stroke:#64748b,color:#334155,stroke-width:1.5px
+classDef process fill:#eaf2ff,stroke:#356ac3,color:#17365d,stroke-width:1.5px
+classDef decision fill:#fff3cd,stroke:#c89b25,color:#664d03,stroke-width:1.5px
+classDef storage fill:#e0f5e9,stroke:#26945e,color:#14532d,stroke-width:1.5px
+classDef human fill:#f3e8ff,stroke:#8b5cf6,color:#4c1d95,stroke-width:1.5px
+classDef external fill:#f1f5f9,stroke:#64748b,color:#334155,stroke-width:1.5px
 
-    class A,B,C,D,E,F,G,I,K,L,P process
-    class H decision
-    class M storage
-    class J human
-    class N external
-
+class A,B,C,D,E,F,G,I,K,L,P process
+class H decision
+class M storage
+class J human
+class N external
+```
 
 ## Основные компоненты системы:
 
